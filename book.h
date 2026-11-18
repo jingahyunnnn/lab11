@@ -29,36 +29,35 @@ public:
     :title{t}, id{d}, price{p}
     {
         testID(); testPrice();
-    }    
-    void input()
-    {
+    }   
+    void input(std::istream& is = std::cin)
+    {//input: 매개변수를 std::istream&로, 기본값은 std::cin으로
+     // std::cin -> is
         std::cout << "Enter book title: ";
-        std::getline(std::cin >> std::ws, title);//std::cin >> title;
+        std::getline(is >> std::ws, title);//std::cin >> title;
         std::cout << "Enter book id: ";
-        std::cin >> id; testID();
+        is >> id; testID();
         std::cout << "Enter book price: ";
-        std::cin >> price; testPrice();
+        is >> price; testPrice();
     }
     friend std::istream& operator>>(std::istream& is, book& b)
-    {
-        std::cout << "Enter book title: ";
-        std::getline(is >> std::ws, b.title);
-        std::cout << "Enter book id: ";
-        is >> b.id; b.testID();
-        std::cout << "Enter book price: ";
-        is >> b.price; b.testPrice();         
+    {//입력연산자>>: input함수를 이용
+        b.input(is);        
         return is;
     }        
     void setID(int d){id = d; testID();}
     void setPrice(int p){price = p; testPrice();}
     void setTitle(const std::string& t){title = t;}
-    void print() const
-    {
-        std::cout << title << "(" << id << "): " << price << " won\n";
+    void print(std::ostream& os = std::cout) const
+    {// print: 매개변수를 std::ostream&로, 기본값은 std::cout으로, 
+     // 공백채움문자설정(fill)과 출력폭(width)설정으로 변경하기
+        os << title << "(" ;
+        os.width(4); os.fill('0');
+        os << id << "): " << price << " won\n";
     }
     friend std::ostream& operator<<(std::ostream& os, const book& b)
-    {
-        os << b.title << ", " << b.id << ", " << b.price << " won\n";
+    {// 출력연산자<<: print함수를 이용
+        b.print(os);
         return os;
     }
     const std::string& getTitle() const {return title;}
